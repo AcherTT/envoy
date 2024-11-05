@@ -18,7 +18,11 @@ public:
 };
 
 RespValuePtr makeError(const std::string& error);
-
+std::string makeRawError(const std::string& error);
+std::string makeRawAuthRequest(const std::string& password);
+std::string makeRawAuthRequest(const std::string& username, const std::string& password);
+std::string_view makeRawReadOnlyRequest();
+std::string makeSelectRequest(const std::string& index);
 class ReadOnlyRequest : public Redis::RespValue {
 public:
   ReadOnlyRequest();

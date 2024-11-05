@@ -25,6 +25,7 @@ envoy_cc_library(
         "//envoy/http:conn_pool_interface",
         "//envoy/http:persistent_quic_info_interface",
         "//envoy/local_info:local_info_interface",
+        "//envoy/redis:async_client_interface",
         "//envoy/runtime:runtime_interface",
         "//envoy/secret:secret_manager_interface",
         "//envoy/server:admin_interface",
@@ -130,6 +131,7 @@ envoy_cc_library(
         ":load_balancer_interface",
         ":upstream_interface",
         "//envoy/http:async_client_interface",
+        "//envoy/redis:async_client_interface",
         "//envoy/tcp:async_tcp_client_interface",
     ],
 )

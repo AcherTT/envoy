@@ -37,6 +37,7 @@
 #include "source/common/network/resolver_impl.h"
 #include "source/common/network/utility.h"
 #include "source/common/protobuf/utility.h"
+#include "source/common/redis/async_client_impl.h"
 #include "source/common/router/shadow_writer_impl.h"
 #include "source/common/runtime/runtime_features.h"
 #include "source/common/tcp/conn_pool.h"
@@ -1540,6 +1541,23 @@ ClusterManagerImpl::ThreadLocalClusterManagerImpl::ClusterEntry::httpAsyncClient
         parent_.parent_.http_context_, parent_.parent_.router_context_);
   }
   return *lazy_http_async_client_;
+}
+
+Redis::AsyncClient&
+ClusterManagerImpl::ThreadLocalClusterManagerImpl::ClusterEntry::redisAsyncClient() {
+  using Extensions::NetworkFilters::Common::Redis::RedisCommandStats;
+  using Extensions::NetworkFilters::Common::Redis::Client::RawClientFactoryImpl;
+
+  if (lazy_redis_async_client_ == nullptr) {
+    auto redis_command_stats =
+        RedisCommandStats::createRedisCommandStats(parent_.parent_.stats_.symbolTable());
+    lazy_redis_async_client_ = std::make_unique<Redis::AsyncClientImpl>(
+        this, parent_.thread_local_dispatcher_, RawClientFactoryImpl::instance_,
+        parent_.parent_.stats_.createScope(
+            fmt::format("cluster.{}.redis_cluster", cluster_info_->name())),
+        redis_command_stats, nullptr);
+  }
+  return *lazy_redis_async_client_;
 }
 
 Tcp::AsyncTcpClientPtr

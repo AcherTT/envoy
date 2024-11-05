@@ -7,6 +7,8 @@
 #include "source/extensions/filters/network/common/redis/codec_impl.h"
 #include "source/extensions/filters/network/common/redis/redis_command_stats.h"
 
+#include "envoy/redis/async_client.h"
+
 namespace Envoy {
 namespace Extensions {
 namespace NetworkFilters {
@@ -14,18 +16,7 @@ namespace Common {
 namespace Redis {
 namespace Client {
 
-/**
- * A handle to an outbound request.
- */
-class PoolRequest {
-public:
-  virtual ~PoolRequest() = default;
-
-  /**
-   * Cancel the request. No further request callbacks will be called.
-   */
-  virtual void cancel() PURE;
-};
+using PoolRequest = Envoy::Redis::PoolRequest;
 
 /**
  * Outbound request callbacks.

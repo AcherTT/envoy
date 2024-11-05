@@ -38,6 +38,41 @@ RespValuePtr makeError(const std::string& error) {
   return response;
 }
 
+std::string makeRawError(const std::string& error) {
+  std::string result;
+  result.append(fmt::format("-{}\r\n", error));
+  return result;
+}
+
+std::string makeRawRequest(const std::string& command, std::vector<std::string_view> params) {
+  std::string result;
+  result.append(fmt::format("*{}\r\n", 1 + params.size()));
+  result.append(fmt::format("${}\r\n{}\r\n", command.size(), command));
+  for (auto& param : params) {
+    result.append(fmt::format("${}\r\n{}\r\n", param.size(), param));
+  }
+  return result;
+}
+
+std::string makeRawAuthRequest(const std::string& username, const std::string& password) {
+  return makeRawRequest("AUTH", {username, password});
+}
+
+std::string makeRawAuthRequest(const std::string& password) {
+  return makeRawRequest("AUTH", {password});
+}
+
+std::string_view makeRawReadOnlyRequest() {
+  const std::string readonly{"readonly"};
+  static const std::string readonly_request =
+      fmt::format("${}\r\n{}\r\n", readonly.size(), readonly);
+  return readonly_request;
+}
+
+std::string makeSelectRequest(const std::string& index) {
+  return makeRawRequest("SELECT", {index});
+}
+
 ReadOnlyRequest::ReadOnlyRequest() {
   std::vector<RespValue> values(1);
   values[0].type(RespType::BulkString);

@@ -72,6 +72,53 @@ private:
   std::forward_list<PendingValue> pending_value_stack_;
 };
 
+class RawDecoderImpl : public Decoder, Logger::Loggable<Logger::Id::redis> {
+public:
+  RawDecoderImpl(RawDecoderCallbacks& callbacks) : callbacks_(callbacks) {}
+
+  // RedisProxy::Decoder
+  void decode(Buffer::Instance& data) override;
+
+private:
+  enum class State {
+    ValueRootStart,
+    ValueStart,
+    IntegerStart,
+    Integer,
+    IntegerLF,
+    BulkStringBody,
+    CR,
+    LF,
+    SimpleString,
+    ValueComplete
+  };
+
+  struct PendingInteger {
+    void reset() {
+      integer_ = 0;
+      negative_ = false;
+    }
+
+    uint64_t integer_;
+    bool negative_;
+  };
+
+  struct PendingValue {
+    RespType type;
+    std::string value;
+    uint64_t current_array_element;
+    uint64_t total_array_element;
+  };
+
+  void parseSlice(const Buffer::RawSlice& slice);
+
+  RawDecoderCallbacks& callbacks_;
+  State state_{State::ValueRootStart};
+  PendingInteger pending_integer_;
+  std::string pending_value_root_;
+  std::forward_list<PendingValue> pending_value_stack_;
+};
+
 /**
  * A factory implementation that returns a real decoder.
  */
@@ -80,6 +127,14 @@ public:
   // RedisProxy::DecoderFactory
   DecoderPtr create(DecoderCallbacks& callbacks) override {
     return DecoderPtr{new DecoderImpl(callbacks)};
+  }
+};
+
+class RawDecoderFactoryImpl : public RawDecoderFactory {
+public:
+  // RedisProxy::RawDecoderFactory
+  DecoderPtr create(RawDecoderCallbacks& callbacks) override {
+    return DecoderPtr{new RawDecoderImpl(callbacks)};
   }
 };
 
@@ -98,6 +153,12 @@ private:
   void encodeError(const std::string& string, Buffer::Instance& out);
   void encodeInteger(int64_t integer, Buffer::Instance& out);
   void encodeSimpleString(const std::string& string, Buffer::Instance& out);
+};
+
+class RawEncoderImpl : public RawEncoder {
+public:
+  // RedisProxy::RawEncoder
+  void encode(std::string_view value, Buffer::Instance& out) override;
 };
 
 } // namespace Redis

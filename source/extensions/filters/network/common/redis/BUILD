@@ -50,6 +50,7 @@ envoy_cc_library(
         ":codec_lib",
         ":redis_command_stats_lib",
         "//envoy/upstream:cluster_manager_interface",
+        "//envoy/upstream:upstream_interface",
     ],
 )
 
@@ -72,6 +73,33 @@ envoy_cc_library(
         "//source/common/upstream:load_balancer_context_base_lib",
         "//source/common/upstream:upstream_lib",
         "@envoy_api//envoy/extensions/filters/network/redis_proxy/v3:pkg_cc_proto",
+    ],
+)
+
+envoy_cc_library(
+    name = "raw_client_interface",
+    hdrs = ["raw_client.h"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":client_interface",
+        ":redis_command_stats_lib",
+        "//envoy/upstream:upstream_interface",
+    ],
+)
+
+envoy_cc_library(
+    name = "raw_client_lib",
+    srcs = ["raw_client_impl.cc"],
+    hdrs = ["raw_client_impl.h"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":codec_lib",
+        ":raw_client_interface",
+        ":utility_lib",
+        "//source/common/buffer:buffer_lib",
+        "//source/common/common:assert_lib",
+        "//source/common/network:filter_lib",
+        "//source/common/upstream:upstream_lib",
     ],
 )
 

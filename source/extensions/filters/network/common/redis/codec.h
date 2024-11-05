@@ -165,6 +165,13 @@ public:
   virtual void onRespValue(RespValuePtr&& value) PURE;
 };
 
+class RawDecoderCallbacks {
+public:
+  virtual ~RawDecoderCallbacks() = default;
+
+  virtual void onRawResponse(std::string&& response) PURE;
+};
+
 /**
  * A redis byte decoder for https://redis.io/topics/protocol
  */
@@ -218,6 +225,22 @@ using EncoderPtr = std::unique_ptr<Encoder>;
 class ProtocolError : public EnvoyException {
 public:
   ProtocolError(const std::string& error) : EnvoyException(error) {}
+};
+
+class RawEncoder {
+public:
+  virtual ~RawEncoder() = default;
+
+  virtual void encode(std::string_view value, Buffer::Instance& out) PURE;
+};
+
+using RawEncoderPtr = std::unique_ptr<RawEncoder>;
+
+class RawDecoderFactory {
+public:
+  virtual ~RawDecoderFactory() = default;
+
+  virtual DecoderPtr create(RawDecoderCallbacks& callbacks) PURE;
 };
 
 } // namespace Redis

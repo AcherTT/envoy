@@ -515,8 +515,8 @@ private:
                                          public ClusterLifecycleCallbackHandler {
     struct ConnPoolsContainer {
       ConnPoolsContainer(Event::Dispatcher& dispatcher, const HostConstSharedPtr& host)
-          : host_handle_(host->acquireHandle()), pools_{std::make_shared<ConnPools>(dispatcher,
-                                                                                    host)} {}
+          : host_handle_(host->acquireHandle()),
+            pools_{std::make_shared<ConnPools>(dispatcher, host)} {}
 
       using ConnPools = PriorityConnPoolMap<std::vector<uint8_t>, Http::ConnectionPool::Instance>;
 
@@ -590,6 +590,7 @@ private:
                                               LoadBalancerContext* context) override;
       Host::CreateConnectionData tcpConn(LoadBalancerContext* context) override;
       Http::AsyncClient& httpAsyncClient() override;
+      Redis::AsyncClient& redisAsyncClient() override;
       Tcp::AsyncTcpClientPtr
       tcpAsyncClient(LoadBalancerContext* context,
                      Tcp::AsyncTcpClientOptionsConstSharedPtr options) override;
@@ -645,6 +646,7 @@ private:
       // Current active LB.
       LoadBalancerPtr lb_;
       Http::AsyncClientPtr lazy_http_async_client_;
+      Redis::AsyncClientPtr lazy_redis_async_client_;
       // Stores QUICHE specific objects which live through out the life time of the cluster and can
       // be shared across its hosts.
       Http::PersistentQuicInfoPtr quic_info_;

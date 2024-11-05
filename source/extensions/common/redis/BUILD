@@ -24,6 +24,7 @@ envoy_cc_library(
     name = "cluster_refresh_manager_lib",
     srcs = ["cluster_refresh_manager_impl.cc"],
     hdrs = ["cluster_refresh_manager_impl.h"],
+    visibility = ["//visibility:public"],
     deps = [
         ":cluster_refresh_manager_interface",
         "//envoy/event:dispatcher_interface",
