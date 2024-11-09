@@ -22,6 +22,11 @@ public:
       : auth_username_(std::move(username)), auth_password_(std::move(password)),
         op_timeout_(op_timeout_milliseconds), buffer_flush_timeout_(3), params_(std::move(params)) {
   }
+  AsyncClientConfig(std::string username, std::string password, int op_timeout_milliseconds,
+                    std::map<std::string, std::string> params)
+      : auth_username_(std::move(username)), auth_password_(std::move(password)),
+        op_timeout_(op_timeout_milliseconds), buffer_flush_timeout_(3), params_(std::move(params)) {
+  }
   const std::string auth_username_;
   const std::string auth_password_;
 
