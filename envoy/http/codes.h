@@ -54,6 +54,7 @@ enum class Code : uint16_t {
   UnsupportedMediaType          = 415,
   RangeNotSatisfiable           = 416,
   ExpectationFailed             = 417,
+  Teapot                     = 418,
   MisdirectedRequest            = 421,
   UnprocessableEntity           = 422,
   Locked                        = 423,
