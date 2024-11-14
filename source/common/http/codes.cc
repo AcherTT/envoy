@@ -270,6 +270,7 @@ const char* CodeUtility::toString(Code code) {
   case Code::UnsupportedMediaType:          return "Unsupported Media Type";
   case Code::RangeNotSatisfiable:           return "Range Not Satisfiable";
   case Code::ExpectationFailed:             return "Expectation Failed";
+  case Code::Teapot:                        return "I'm a teapot";
   case Code::MisdirectedRequest:            return "Misdirected Request";
   case Code::UnprocessableEntity:           return "Unprocessable Entity";
   case Code::Locked:                        return "Locked";
