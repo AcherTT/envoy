@@ -61,6 +61,7 @@ envoy_cc_library(
     name = "base64_lib",
     srcs = ["base64.cc"],
     hdrs = ["base64.h"],
+    visibility = ["//visibility:public"],
     deps = [
         ":assert_lib",
         ":empty_string",
