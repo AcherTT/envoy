@@ -149,8 +149,8 @@ docker run --rm \
        -e ENVOY_RBE \
        -e ENVOY_BUILD_IMAGE \
        -e ENVOY_SRCDIR \
-       -e ENVOY_BUILD_TARGET \
-       -e ENVOY_BUILD_DEBUG_INFORMATION \
+       -e ENVOY_BUILD_TARGET=envoy \
+       -e ENVOY_BUILD_DEBUG_INFORMATION=envoy \
        -e ENVOY_BUILD_FILTER_EXAMPLE \
        -e ENVOY_COMMIT \
        -e ENVOY_HEAD_REF \
