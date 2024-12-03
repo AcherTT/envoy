@@ -146,9 +146,9 @@ function cp_binary_for_image_build() {
   echo "Copying binary for image build..."
   mkdir -p "${BASE_TARGET_DIR}"/"${TARGET_DIR}"
   cp -f "${FINAL_DELIVERY_DIR}"/envoy "${BASE_TARGET_DIR}"/"${TARGET_DIR}"
-  if [[ "${COMPILE_TYPE}" == "dbg" || "${COMPILE_TYPE}" == "opt" ]]; then
-    cp -f "${FINAL_DELIVERY_DIR}"/envoy.dwp "${BASE_TARGET_DIR}"/"${TARGET_DIR}"
-  fi
+#   if [[ "${COMPILE_TYPE}" == "dbg" || "${COMPILE_TYPE}" == "opt" ]]; then
+#     cp -f "${FINAL_DELIVERY_DIR}"/envoy.dwp "${BASE_TARGET_DIR}"/"${TARGET_DIR}"
+#   fi
 
   # Tools for the tools image. Strip to save size.
 #   strip bazel-bin/test/tools/schema_validator/schema_validator_tool \
