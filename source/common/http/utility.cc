@@ -585,12 +585,7 @@ std::string Utility::makeSetCookieValue(const std::string& key, const std::strin
   // Best effort attempt to avoid numerous string copies.
   cookie_value.reserve(value.size() + path.size() + 30);
 
-  if (value.find_first_of(" ,;") != std::string::npos) {
-    cookie_value = absl::StrCat(key, "=\"", value, "\"");
-  } else {
-    cookie_value = absl::StrCat(key, "=", value);
-  }
-
+  cookie_value = absl::StrCat(key, "=\"", value, "\"");
   if (max_age != std::chrono::seconds::zero()) {
     absl::StrAppend(&cookie_value, "; Max-Age=", max_age.count());
   }
